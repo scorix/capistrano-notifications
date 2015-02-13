@@ -41,13 +41,7 @@ namespace :notify do
 
   task :finishing do
     find_adapter do |adapter|
-      adapter.notify(notify[:to],
-                     t(:revision_log_message,
-                       branch: fetch(:branch),
-                       user: local_user,
-                       sha: fetch(:current_revision),
-                       release: fetch(:release_timestamp)),
-                     "#{fetch(:application)} #{fetch(:env)}".titleize)
+      adapter.notify(notify[:to], revision_log)
     end
   end
 
