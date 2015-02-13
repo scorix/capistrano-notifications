@@ -3,6 +3,8 @@ require 'json'
 require 'active_support/core_ext/string'
 require 'active_support/core_ext/array'
 
+require 'capistrano/notifications/version'
+
 module Capistrano
   module Notifications
     autoload :Adapter, 'capistrano/notifications/adapter'
