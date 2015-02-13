@@ -7,7 +7,7 @@ Send notifications around deploy to teammates(subscribers).
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'capistrano-notifications', github: 'scorix/capistrano-notifications'
+gem 'capistrano-notifications'
 ```
 
 And then execute:
@@ -22,9 +22,13 @@ in deploy.rb
 
 ```ruby
 # deploy.rb
-set :notify_default_options, team: 'my-team', token: 'token'
-set :notify_adapter, :Slack
-set :subscribers, %w(@scorix #deploy)
+set :notify, -> {
+  {
+      to: %w(@scorix #deploy),
+      via: :slack,
+      options: {team: 'my-team', token: 'token'}
+  }
+}
 ```
 
 in Capfile
