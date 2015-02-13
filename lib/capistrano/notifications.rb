@@ -1,5 +1,7 @@
 require 'faraday'
 require 'json'
+require 'active_support/core_ext/string'
+require 'active_support/core_ext/array'
 
 module Capistrano
   module Notifications

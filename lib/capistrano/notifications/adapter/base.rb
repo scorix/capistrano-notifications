@@ -12,13 +12,13 @@ module Capistrano
         end
 
         def notify(members = [], message = '')
-          members.each { |member| send_notification(member, message) }
+          Array.wrap(members).each { |member| send_notification(member, message) }
         end
 
         protected
 
         def send_notification(_member, _message)
-          raise NoMethodError, 'send_notification is not defined.'
+          raise NoMethodError, 'send_notification is not implemented.'
         end
 
       end

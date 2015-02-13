@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'capistrano', '~> 3.3.5'
 
   spec.add_dependency 'faraday'
+  spec.add_dependency 'activesupport'
 end

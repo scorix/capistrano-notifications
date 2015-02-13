@@ -6,7 +6,7 @@ module Capistrano
         attr_reader :team, :token
 
         protected
-        def send_notification(_member, _message)
+        def send_notification(member, message, username = 'Capistrano Notification')
           connection = Faraday.new(url: "https://#{team}.slack.com") do |faraday|
             faraday.request :url_encoded
             faraday.adapter Faraday.default_adapter
@@ -16,13 +16,7 @@ module Capistrano
             req.headers['User-Agent'] = "Capistrano Notification #{Capistrano::Notifications::VERSION}"
             req.body = {
                 token: token,
-                payload: {
-                    channel: "#{_member}",
-                    username: "#{fetch(:application)} #{fetch(:env)}",
-                    text: _message,
-                    icon_emoji: ':grin:',
-                    mrkdwn: true
-                }.to_json
+                payload: {channel: member, username: username, text: message, icon_emoji: ':grin:', mrkdwn: true}.to_json
             }
           end
         end

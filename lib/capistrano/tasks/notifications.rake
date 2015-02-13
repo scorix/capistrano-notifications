@@ -1,49 +1,29 @@
 #
-# adapters:
+#   examples:
 #
-#   * Slack
+#     * Slack
 #
-#     example:
+#       set :notify, -> {
+#         {
+#             to: %w(@scorix #deploy),
+#             via: :slack,
+#             options: {team: 'my-team', token: 'token'}
+#         }
+#       }
 #
-#       set :notify_adapter, :Slack
-#
-set :notify_adapter, -> { nil }
-
-#
-# default options:
-#
-#   * Slack:
-#
-#       team **required**
-#
-#       token **required**
-#
-#      example:
-#
-#        set :notify_default_options, team: 'my-team', token: 'token'
-#
-set :notify_default_options, -> { {} }
-
-#
-# subscribers
-#
-#    * Slack:
-#
-#      subscribers could be a user, or a channel
-#
-#      example:
-#
-#        set :subscribers, -> { ['@scorix', '#deploy'] }
-#
-set :subscribers, -> { [] }
+set :notify, -> { {} }
 
 namespace :notify do
 
+  def notify
+    fetch(:notify) { {} }
+  end
+
   def find_adapter
-    adapter = fetch(:notify_adapter, nil)
+    adapter = notify[:via]
 
     if adapter
-      adapter = Capistrano::Notifications::Adapter.const_get(adapter.to_sym).setup(fetch(:notify_default_options))
+      adapter = Capistrano::Notifications::Adapter.const_get(adapter.to_s.classify.to_sym).setup(notify[:options])
 
       begin
         yield adapter
@@ -55,17 +35,19 @@ namespace :notify do
 
   task :starting do
     find_adapter do |adapter|
-      adapter.notify(fetch(:subscribers), "@#{local_user} is deploying branch #{fetch(:branch)}")
+      adapter.notify(notify[:to], "#{local_user} is deploying the `#{fetch(:branch)}` branch...")
     end
   end
 
   task :finishing do
     find_adapter do |adapter|
-      adapter.notify(fetch(:subscribers), t(:revision_log_message,
-                                            branch: fetch(:branch),
-                                            user: "@#{local_user}",
-                                            sha: fetch(:current_revision),
-                                            release: fetch(:release_timestamp)))
+      adapter.notify(notify[:to],
+                     t(:revision_log_message,
+                       branch: fetch(:branch),
+                       user: local_user,
+                       sha: fetch(:current_revision),
+                       release: fetch(:release_timestamp)),
+                     "#{fetch(:application)} #{fetch(:env)}".titleize)
     end
   end
 
