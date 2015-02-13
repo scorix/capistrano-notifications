@@ -20,8 +20,8 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'capistrano', '~> 3.3.5'
+  spec.add_development_dependency 'capistrano', '~> 3.3'
 
-  spec.add_dependency 'faraday'
-  spec.add_dependency 'activesupport'
+  spec.add_dependency 'faraday', '~> 0.9'
+  spec.add_dependency 'activesupport', '~> 4.1'
 end
